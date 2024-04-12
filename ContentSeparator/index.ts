@@ -1,6 +1,28 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 
+/**
+ * Author: Joe Cooney
+ * Company: Microsoft
+ * Date: 12.04.2024
+ */
 export class ContentSeparator implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+
+    //#region Vars
+    //Context Logic
+    private container: HTMLDivElement;
+    private context: ComponentFramework.Context<IInputs>;
+    private notifyOutPutChanged: () => void;//to notify form of control change...    
+    private state: ComponentFramework.Dictionary;
+    
+    //Global Vars 
+    private cS_Container : HTMLDivElement;
+    private cS_Label: HTMLLabelElement;
+    private cS_text: HTMLSelectElement;
+    private cS_ContentSeparatorValue: string; 
+    //#endregion
+
+    //#region constructor
+
 
     /**
      * Empty constructor.
@@ -10,6 +32,8 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
 
     }
 
+    //#endregion
+    
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
      * Data-set values are not initialized here, use updateView.
@@ -20,8 +44,46 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
      */
     public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement): void
     {
-        // Add control initialization code
-        alert("hello content!")
+        //#region - control initialization code 
+        this.context = context;
+        this.notifyOutPutChanged = notifyOutputChanged;
+        this.state = state;
+        this.container = container;
+        //#endregion 
+        this.loadData();
+        this.loadForm();
+        
+        //Set field value to control.
+        //Parse String, use sepeartor to break, set correct value to field.
+        //check if the field should be disabled/enabled.
+    }
+    /*
+     * Used on load event to get the manifest data values. 
+     */
+    private loadData(): void {
+        // Get the value of the textbox
+        //let textValue = this.context.parameters
+
+        
+    }
+    /*
+     * Used on load event to get the html control value and set the input html to the string. 
+     */
+    private loadForm(): void {
+        this.loadContainer();
+        //Create HTML Control.
+    }
+    /*
+     * Used on load event to get the html control value and set the input html to the string. 
+     */
+    private loadContainer(): void {
+        this.cS_Container = document.createElement('div');
+        this.cS_Container.id = "mycontainer";
+        this.cS_Container.className = "mycontainer"; 
+        this.container.appendChild(this.cS_Container);
+    }
+    private setFormLoadValue(): void {
+
     }
 
 
@@ -40,7 +102,9 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
      */
     public getOutputs(): IOutputs
     {
-        return {};
+        return {
+            //ContentSeparatorValue : this.cS_ContentSeparatorValue
+        };
     }
 
     /**
