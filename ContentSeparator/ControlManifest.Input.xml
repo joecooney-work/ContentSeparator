@@ -20,11 +20,28 @@
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
     <property name="ContentSeparatorValue" 
     display-name-key="ContentSeparatorValue_Display_Key" 
-    description-key="Will save Date And Time in control." 
+    description-key="The control the ContentSeparator is applied to is displayed and updated here." 
     of-type="SingleLine.Text" 
     usage="bound" 
-    required="true" 
-    />
+    required="true"/>
+    <property name="EditMode" 
+    display-name-key="EditMode_Display_Key" 
+    description-key="True means the field can be updated, false will display the required field without the ability to change the value. (Defaults to true)" 
+    of-type="TwoOptions" 
+    usage="input" 
+    required="false"/>
+    <property name="LeftContent" 
+    display-name-key="LeftContent_Display_Key" 
+    description-key="True means the field will show left content, false will display the right content. (Defaults to true)" 
+    of-type="TwoOptions" 
+    usage="input" 
+    required="false"/>
+    <property name="Separator" 
+    display-name-key="Separator_Display_Key" 
+    description-key="The value entered will be used to seperate the string of text stored in the field, left blank the value is (;). (Ex. Your Text Here , Your other Text Here)" 
+    of-type="SingleLine.Text" 
+    usage="input" 
+    required="false"/>
 
     <!--
       Property node's of-type attribute can be of-type-group attribute.
@@ -44,7 +61,7 @@
       <resx path="strings/ContentSeparator.1033.resx" version="1.0.0" />
       -->
     </resources>
-    UNCOMMENT TO ENABLE THE SPECIFIED API
+    
     <feature-usage>
       <!-- <uses-feature name="Device.captureAudio" required="true" />
       <uses-feature name="Device.captureImage" required="true" />

@@ -17,11 +17,23 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
     //Global Vars 
     private cS_Container : HTMLDivElement;
     private cS_Label: HTMLLabelElement;
-    private cS_text: HTMLSelectElement;
+    private cS_Input: HTMLInputElement;
     private cS_ContentSeparatorValue: string; 
+    private separator: string;
+    private editMode: boolean;
+    private showLeft: boolean;
+    private inputChange = (event: Event) => {
+        let updatedvalue = (event.target as HTMLInputElement).value;
+        let originalcontent = this.cS_ContentSeparatorValue.split(this.separator); 
+        this.cS_ContentSeparatorValue = 
+        this.showLeft ? 
+        updatedvalue + " " + this.separator + " " + originalcontent[1].trim() : // Original Left (separator) New Value
+        originalcontent[0].trim() + " " + this.separator + " " + updatedvalue;  // New Value (separator) Original Left
+        this.notifyOutPutChanged();
+    }
     //#endregion
 
-    //#region constructor
+    //#region Empty Constructor
 
 
     /**
@@ -52,38 +64,66 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
         //#endregion 
         this.loadData();
         this.loadForm();
-        
-        //Set field value to control.
-        //Parse String, use sepeartor to break, set correct value to field.
-        //check if the field should be disabled/enabled.
     }
     /*
      * Used on load event to get the manifest data values. 
      */
     private loadData(): void {
-        // Get the value of the textbox
-        //let textValue = this.context.parameters
-
-        
+        this.showLeft = this.context.parameters.LeftContent.raw;
+        this.editMode = this.context.parameters.EditMode.raw; 
+        this.separator = this.context.parameters.Separator.raw || ";"; 
+        this.cS_ContentSeparatorValue = this.context.parameters.ContentSeparatorValue.raw || "";       
     }
     /*
      * Used on load event to get the html control value and set the input html to the string. 
      */
     private loadForm(): void {
-        this.loadContainer();
-        //Create HTML Control.
+        this.createContainer();
+        this.createLabel();
+        this.createInput();
+        this.setFormLoadValue();
     }
     /*
      * Used on load event to get the html control value and set the input html to the string. 
      */
-    private loadContainer(): void {
-        this.cS_Container = document.createElement('div');
-        this.cS_Container.id = "mycontainer";
-        this.cS_Container.className = "mycontainer"; 
+    private createContainer(): void {
+        this.cS_Container = this.getElement("div", "mycontainer", "mycontainer") as HTMLDivElement;
         this.container.appendChild(this.cS_Container);
     }
-    private setFormLoadValue(): void {
-
+    /*
+     * Used on load event to create the input control and append it to the Container. 
+     */
+    private createLabel(): void {
+        this.cS_Label = this.getElement("label", "label", "mylabel") as HTMLLabelElement;
+        this.cS_Label.innerText = "?TODO: Field Name HERE?"
+        this.container.appendChild(this.cS_Label);
+    }
+    /*
+     * Used on load event to create the input control and append it to the Container. 
+     */
+    private createInput(): void {
+        this.cS_Input = this.getElement("input", "Input", "myinput") as HTMLInputElement;
+        this.cS_Input.disabled = !this.editMode;
+        this.cS_Input.addEventListener("keyup", this.inputChange);
+        this.container.appendChild(this.cS_Input);
+    }
+    private getElement(type: string, id: string, className: string): HTMLElement {
+        let obj = document.createElement(type);
+        obj.id = id;
+        obj.className = className;
+        return obj;
+    }
+    /**
+     * Sets the Control value to the input for the Content Separator.     
+     */
+    private setFormLoadValue(): void {        
+        try {
+            let content = this.cS_ContentSeparatorValue.split(this.separator);   
+            if (content.length < 2) return;     
+            this.cS_Input.value = this.showLeft ? content[0].trim() : content[1].trim();
+        } catch (error) {
+            alert("Please contact support, the following error occurred: ERROR:" + error);
+        }
     }
 
 
@@ -103,7 +143,7 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
     public getOutputs(): IOutputs
     {
         return {
-            //ContentSeparatorValue : this.cS_ContentSeparatorValue
+            ContentSeparatorValue : this.cS_ContentSeparatorValue
         };
     }
 
