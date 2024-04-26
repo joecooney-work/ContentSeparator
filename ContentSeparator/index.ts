@@ -22,6 +22,8 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
     private separator: string;
     private editMode: boolean;
     private showLeft: boolean;
+    private showLabel: boolean;
+    private labeltext: string;
     private inputChange = (event: Event) => {
         let updatedvalue = (event.target as HTMLInputElement).value;
         let originalcontent = this.cS_ContentSeparatorValue.split(this.separator); 
@@ -71,8 +73,10 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
     private loadData(): void {
         this.showLeft = this.context.parameters.LeftContent.raw;
         this.editMode = this.context.parameters.EditMode.raw; 
-        this.separator = this.context.parameters.Separator.raw || ";"; 
-        this.cS_ContentSeparatorValue = this.context.parameters.ContentSeparatorValue.raw || "";       
+        this.separator = this.context.parameters.Separator.raw || ","; 
+        this.cS_ContentSeparatorValue = this.context.parameters.ContentSeparatorValue.raw || "";   
+        this.labeltext = this.context.parameters.LabelValue.raw || "";  
+        this.showLabel = this.context.parameters.LabelDisplay.raw || false;        
     }
     /*
      * Used on load event to get the html control value and set the input html to the string. 
@@ -94,9 +98,15 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
      * Used on load event to create the input control and append it to the Container. 
      */
     private createLabel(): void {
-        this.cS_Label = this.getElement("label", "label", "mylabel") as HTMLLabelElement;
-        this.cS_Label.innerText = "?TODO: Field Name HERE?"
-        this.container.appendChild(this.cS_Label);
+        try {
+            this.cS_Label = this.getElement("label", "label", "mylabel") as HTMLLabelElement;
+            let message = this.showLeft ? this.labeltext.split(this.separator)[0] : this.labeltext.split(this.separator)[1];
+            this.cS_Label.innerText = "(" + message + ")";
+            if(this.showLabel === true)
+                this.container.appendChild(this.cS_Label);
+        } catch (error){
+            alert(error);
+        }
     }
     /*
      * Used on load event to create the input control and append it to the Container. 
