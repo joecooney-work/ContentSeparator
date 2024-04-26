@@ -101,7 +101,7 @@ export class ContentSeparator implements ComponentFramework.StandardControl<IInp
         try {
             this.cS_Label = this.getElement("label", "label", "mylabel") as HTMLLabelElement;
             let message = this.showLeft ? this.labeltext.split(this.separator)[0] : this.labeltext.split(this.separator)[1];
-            this.cS_Label.innerText = "(" + message + ")";
+            this.cS_Label.innerText = "(" + message.trim() + ")";
             if(this.showLabel === true)
                 this.container.appendChild(this.cS_Label);
         } catch (error){
